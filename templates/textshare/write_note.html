@@ -1,17 +1,18 @@
 <html>
 	<head>
-		<title>TextShare - Online live text sharing</title>
+		<title>TextShare - Note ID: {{note.key}}</title>
 	</head>
 	<body>
 		<div style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
 			<center>
-				<form action="/save/" method="post">
+				<form action="/save/{{note.key}}/" method="post">
 					{% csrf_token %}
-					<textarea id="note_text" name="note_text" rows=20 cols=80></textarea>
+					<textarea onChange="send_text();" id="note_text" name="note_text" rows=20 cols=80>{{note.text}}</textarea>
 					</br>
 					<input type="submit" value="Save">
 				</form>
 			</center>
 		</div>
 	</body>
+	{% include "textshare/write_sio.js" %}
 </html>

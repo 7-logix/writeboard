@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<title>TextShare - Online live text sharing</title>
+		<title>{% block title %} TextShare - Online live text sharing {% endblock %}</title>
 	</head>
 	<body>
 		<div style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
 			<center>
-				<form action="/save/" method="post">
+				<form action={% block form_action %}{% endblock %} method="post">
 					{% csrf_token %}
-					<textarea id="note_text" name="note_text" rows=20 cols=80></textarea>
+					<textarea id="note_text" name="note_text" rows=20 cols=80>{% block note_text %}{% endblock %}</textarea>
 					</br>
 					<input type="submit" value="Save">
 				</form>

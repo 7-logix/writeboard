@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -14,8 +15,14 @@ urlpatterns = patterns('textshare.views',
 
     # Uncomment the next line to enable the admin:
     url(r'^$', 'index'),
+    url(r'^(?P<note_key>\d+)/(?P<note_pass>\d+)/$', 'edit_note'),
     url(r'^(?P<note_key>\d+)/$', 'show_note'),
     url(r'^save/$', 'save_note'),
+    url(r'^save/(?P<note_key>\d+)/$', 'update_note'),
     
     url(r'^admin/', include(admin.site.urls))
+)
+
+urlpatterns += patterns('',
+    (r'^' + settings.STATIC_DOC_URL + '(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT}),
 )
