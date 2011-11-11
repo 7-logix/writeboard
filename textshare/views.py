@@ -4,28 +4,48 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from textshare.models import Note
 from datetime import datetime
+from random import shuffle
 
 def index(request):
 	return render_to_response('textshare/index.html',context_instance=RequestContext(request))
-    
+
+#show a note in read-only mode
 def show_note(request,note_key):
-	note = Note.objects.get(key = note_key)
-	return render_to_response('textshare/read_note.html', {'note': note})
-	
+	note = Note.objects.filter(key = note_key)
+	if note.count() > 0: #note found
+		return render_to_response('textshare/read_note.html', {'note': note[0]})
+	else: #note doesn't exist
+		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))
+		
+#show a note in read-write mode
 def edit_note(request,note_key,note_pass):
-	if note_key == note_pass:
-		note = Note.objects.get(key = note_key)
-		return render_to_response('textshare/write_note.html', {'note': note},context_instance=RequestContext(request))
-	else:
-		return render_to_response('textshare/index.html',context_instance=RequestContext(request))
-	
+	note = Note.objects.filter(key = note_key)
+	if note.count() > 0: #note found
+		if note_pass == note[0].pass_key: #key match
+			return render_to_response('textshare/write_note.html', {'note': note[0]},context_instance=RequestContext(request))
+		else: #invalid key
+			return render_to_response('textshare/index.html', {'error': 2},context_instance=RequestContext(request))
+	else: #note doesn't exist
+		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))
+
+#create a note
 def save_note(request):
-	n = Note(text = request.POST['note_text'], create_date = datetime.now(), key = len(Note.objects.all()))
-	n.save()
-	return HttpResponseRedirect(reverse('textshare.views.show_note', args = (n.key,)))
+	#generate random key
+	arr = map(chr, range(97, 123))
+	shuffle(arr)
+	secret = ''.join(arr[0:11])
 	
-def update_note(request,note_key):
-	n = Note.objects.get(key = note_key)
-	n.text = request.POST['note_text']
+	#create note
+	n = Note(text = request.POST['note_text'], create_date = datetime.now(), key = len(Note.objects.all()), pass_key = secret)
 	n.save()
-	return HttpResponseRedirect(reverse('textshare.views.show_note', args = (n.key,)))
+	
+	return render_to_response('textshare/save_note.html', {'note': n})
+
+#update an already existing note
+def update_note(request,note_key):
+	if Note.objects.filter(key = note_key) > 0: #note found
+		note = Note.objects.get(key = note_key)
+		note.text = request.POST['note_text']
+		note.save()
+	
+	return HttpResponseRedirect(reverse('textshare.views.show_note', args = (note_key,)))

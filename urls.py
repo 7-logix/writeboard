@@ -15,7 +15,7 @@ urlpatterns = patterns('textshare.views',
 
     # Uncomment the next line to enable the admin:
     url(r'^$', 'index'),
-    url(r'^(?P<note_key>\d+)/(?P<note_pass>\d+)/$', 'edit_note'),
+    url(r'^(?P<note_key>\d+)/(?P<note_pass>\w+)/$', 'edit_note'),
     url(r'^(?P<note_key>\d+)/$', 'show_note'),
     url(r'^save/$', 'save_note'),
     url(r'^save/(?P<note_key>\d+)/$', 'update_note'),

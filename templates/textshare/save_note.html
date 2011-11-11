@@ -5,16 +5,11 @@
 	<body>
 		<div style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
 			<center>
+				<p>Note saved successfully</p>
 				<p>Read-Only URL: www.textshare.com/{{note.key}}/</p>
 				<p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p>
-				<form action="{% url textshare.views.update_note note.key %}" method="post">
-					{% csrf_token %}
-					<textarea onChange="send_text();" id="note_text" name="note_text" rows=20 cols=80>{{note.text}}</textarea>
-					</br>
-					<input type="submit" value="Save">
-				</form>
+				<p>Please save these URLs for further usage/</p>
 			</center>
 		</div>
 	</body>
-	{% include "textshare/write_sio.js" %}
 </html>
