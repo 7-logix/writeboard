@@ -18,7 +18,7 @@ urlpatterns = patterns('textshare.views',
     url(r'^(?P<note_key>\d+)/(?P<note_pass>\w+)/$', 'edit_note'),
     url(r'^(?P<note_key>\d+)/$', 'show_note'),
     url(r'^save/$', 'save_note'),
-    url(r'^save/(?P<note_key>\d+)/$', 'update_note'),
+    url(r'^save/(?P<note_key>\d+)/(?P<note_pass>\w+)/$', 'update_note'),
     
     url(r'^admin/', include(admin.site.urls))
 )

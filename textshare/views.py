@@ -12,6 +12,7 @@ def index(request):
 #show a note in read-only mode
 def show_note(request,note_key):
 	note = Note.objects.filter(key = note_key)
+	
 	if note.count() > 0: #note found
 		return render_to_response('textshare/read_note.html', {'note': note[0]})
 	else: #note doesn't exist
@@ -20,6 +21,7 @@ def show_note(request,note_key):
 #show a note in read-write mode
 def edit_note(request,note_key,note_pass):
 	note = Note.objects.filter(key = note_key)
+	
 	if note.count() > 0: #note found
 		if note_pass == note[0].pass_key: #key match
 			return render_to_response('textshare/write_note.html', {'note': note[0]},context_instance=RequestContext(request))
@@ -39,13 +41,19 @@ def save_note(request):
 	n = Note(text = request.POST['note_text'], create_date = datetime.now(), key = len(Note.objects.all()), pass_key = secret)
 	n.save()
 	
-	return render_to_response('textshare/save_note.html', {'note': n})
+	return HttpResponseRedirect(reverse('textshare.views.edit_note', args = (n.key,n.pass_key)))
+	#return render_to_response('textshare/save_note.html', {'note': n})
 
 #update an already existing note
-def update_note(request,note_key):
+def update_note(request,note_key,note_pass):
 	if Note.objects.filter(key = note_key) > 0: #note found
 		note = Note.objects.get(key = note_key)
-		note.text = request.POST['note_text']
-		note.save()
-	
-	return HttpResponseRedirect(reverse('textshare.views.show_note', args = (note_key,)))
+		
+		if note.pass_key == note_pass: #key match
+			note.text = request.POST['note_text']
+			note.save()
+			return HttpResponseRedirect(reverse('textshare.views.edit_note', args = (note.key,note.pass_key)))
+		else: #invalid key
+			return render_to_response('textshare/index.html', {'error': 2},context_instance=RequestContext(request))
+	else: #note doesn't exist
+		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))

@@ -5,11 +5,11 @@
 	<body>
 		<div style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
 			<center>
-				<p>Read-Only URL: www.textshare.com/{{note.key}}/</p>
-				<p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p>
-				<form action="{% url textshare.views.update_note note.key %}" method="post">
+				<a href="/{{note.key}}/"><p>Read-Only URL: www.textshare.com/{{note.key}}/</p></a>
+				<a href="/{{note.key}}/{{note.pass_key}}/"><p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p></a>
+				<form action="{% url textshare.views.update_note note.key note.pass_key%}" method="post">
 					{% csrf_token %}
-					<textarea onChange="send_text();" id="note_text" name="note_text" rows=20 cols=80>{{note.text}}</textarea>
+					<textarea onkeyup="send_text();" id="note_text" name="note_text" rows=20 cols=80>{{note.text}}</textarea>
 					</br>
 					<input type="submit" value="Save">
 				</form>
