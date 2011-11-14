@@ -1,11 +1,13 @@
-<html>
-	<head>
-		<title>TextShare - Note ID: {{note.key}}</title>
-	</head>
-	<body>
-		<div id="note_text" style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
-			{{note.text}}
-		</div>
-	</body>
+{% extends "textshare/base.html" %}
+
+{% block title %}TextShare - Note ID: {{note.key}}{% endblock %}
+
+{% block content %}
+
+	<div id="note_text" style="width:700px;margin-left:auto;margin-right:auto;margin-top:40px;">
+		{{note.text}}
+	</div>
+
 	{% include "textshare/read_sio.js" %}
-</html>
+
+{% endblock %}

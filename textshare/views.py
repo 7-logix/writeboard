@@ -7,8 +7,14 @@ from datetime import datetime
 from random import shuffle
 
 def index(request):
-	return render_to_response('textshare/index.html',context_instance=RequestContext(request))
+	notes = Note.objects.all().order_by('-create_date')[:10]
+	return render_to_response('textshare/index.html', {'notes': notes}, context_instance=RequestContext(request))
 
+#index page with error report
+def index_error(request,err_id):
+	notes = Note.objects.all().order_by('-create_date')[:10]
+	return render_to_response('textshare/index.html', {'error': err_id, 'notes': notes}, context_instance=RequestContext(request))
+	
 #show a note in read-only mode
 def show_note(request,note_key):
 	note = Note.objects.filter(key = note_key)
@@ -16,7 +22,7 @@ def show_note(request,note_key):
 	if note.count() > 0: #note found
 		return render_to_response('textshare/read_note.html', {'note': note[0]})
 	else: #note doesn't exist
-		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))
+		return index_error(request,1)
 		
 #show a note in read-write mode
 def edit_note(request,note_key,note_pass):
@@ -26,12 +32,16 @@ def edit_note(request,note_key,note_pass):
 		if note_pass == note[0].pass_key: #key match
 			return render_to_response('textshare/write_note.html', {'note': note[0]},context_instance=RequestContext(request))
 		else: #invalid key
-			return render_to_response('textshare/index.html', {'error': 2},context_instance=RequestContext(request))
+			return index_error(request,2)
 	else: #note doesn't exist
-		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))
+		return index_error(request,1)
 
 #create a note
 def save_note(request):
+	if request.POST['note_text'] == "": #note is empty
+		notes = Note.objects.all().order_by('-create_date')[:10]
+		return HttpResponseRedirect(reverse('textshare.views.index'))
+		
 	#generate random key
 	arr = map(chr, range(97, 123))
 	shuffle(arr)
@@ -42,7 +52,6 @@ def save_note(request):
 	n.save()
 	
 	return HttpResponseRedirect(reverse('textshare.views.edit_note', args = (n.key,n.pass_key)))
-	#return render_to_response('textshare/save_note.html', {'note': n})
 
 #update an already existing note
 def update_note(request,note_key,note_pass):
@@ -54,6 +63,6 @@ def update_note(request,note_key,note_pass):
 			note.save()
 			return HttpResponseRedirect(reverse('textshare.views.edit_note', args = (note.key,note.pass_key)))
 		else: #invalid key
-			return render_to_response('textshare/index.html', {'error': 2},context_instance=RequestContext(request))
+			return index_error(request,2)
 	else: #note doesn't exist
-		return render_to_response('textshare/index.html', {'error': 1}, context_instance=RequestContext(request))
+		return index_error(request,1)

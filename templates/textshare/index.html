@@ -1,23 +1,41 @@
-<html>
-	<head>
-		<title>TextShare - Online live text sharing</title>
-	</head>
-	<body>
-		<div style="width:700px;padding-left:auto;padding-right:auto;margin-left:auto;margin-right:auto;">
-			<center>
-				{% if error == 1 %}
-					<p style="color:red;">A note with the supplied ID does not exist</p>
-				{% endif %}
-				{% if error == 2 %}
-					<p style="color:red;">The pass key supplied is incorrect</p>
-				{% endif %}
-				<form action="{% url textshare.views.save_note%}" method="post">
-					{% csrf_token %}
-					<textarea id="note_text" name="note_text" rows=20 cols=80></textarea>
-					</br>
-					<input type="submit" value="Save">
-				</form>
-			</center>
-		</div>
-	</body>
-</html>
+{% extends "textshare/base.html" %}
+
+{% block content %}
+
+	<div style="width:700px;margin-left:auto;margin-right:auto;margin-top:40px;">
+		<center>
+			{% if error == 1 %}
+				<p style="color:red;">A note with the supplied ID does not exist</p>
+			{% endif %}
+			{% if error == 2 %}
+				<p style="color:red;">The pass key supplied is incorrect</p>
+			{% endif %}
+			<form action="{% url textshare.views.save_note%}" method="post">
+				{% csrf_token %}
+				<textarea id="note_text" name="note_text" rows=20 cols=80></textarea>
+				</br>
+				<input type="submit" value="Save">
+			</form>
+		</center>
+	</div>
+	<hr />
+
+	<div style="height:50px;">
+		<center>
+			<h1>Latest shares:</h1>
+		</center>
+	</div>
+
+	<div style="width:700px;margin-left:auto;margin-right:auto;">
+		<center>
+			{% for note in notes %}
+				<div style="margin-top:40px;">
+					<a href="/{{note.key}}/">ID: {{note.key}}</a>
+					<br />
+					{{note.text}}
+				</div>
+			{% endfor %}
+		</center>
+	</div>
+
+{% endblock %}
