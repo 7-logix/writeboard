@@ -4,19 +4,24 @@
 
 {% block content %}
 
-	<div style="width:700px;margin-left:auto;margin-right:auto;margin-top:40px;">
-		<center>
-			<a href="/{{note.key}}/"><p>Read-Only URL: www.textshare.com/{{note.key}}/</p></a>
-			<a href="/{{note.key}}/{{note.pass_key}}/"><p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p></a>
-			<form action="{% url textshare.views.update_note note.key note.pass_key%}" method="post">
-				{% csrf_token %}
-				<textarea onkeyup="send_text();" id="note_text" name="note_text" rows=20 cols=80>{{note.text}}</textarea>
-				</br>
-				<input type="submit" value="Save">
-			</form>
-		</center>
-	</div>
+<div style="width:900px;margin-left:auto;margin-right:auto;margin-top:40px;">
+	<center>
+		<a href="/{{note.key}}/"><p>Read-Only URL: www.textshare.com/{{note.key}}/</p></a>
+		<a href="/{{note.key}}/{{note.pass_key}}/"><p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p></a>
+	</center>
+	
+	<div id="editor" style="width:900px;height:350px;"></div>
+	
+	<center>
+		<form action="{% url textshare.views.update_note note.key note.pass_key%}" method="post" onsubmit="form_onsubmit();">
+			{% csrf_token %}
+			<input type="hidden" id="note_text" name="note_text">
+			</br>
+			<input type="submit" value="Save" style="position:relative;top:350px;">
+		</form>
+	</center>
+</div>
 
-	{% include "textshare/write_sio.js" %}
+{% include "textshare/write_sio.js" %}
 
 {% endblock %}

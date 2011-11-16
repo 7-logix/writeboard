@@ -4,10 +4,12 @@
 
 {% block content %}
 
-	<div id="note_text" style="width:700px;margin-left:auto;margin-right:auto;margin-top:40px;">
-		{{note.text}}
+<div style="width:900px;margin-left:auto;margin-right:auto;margin-top:40px;">
+	<div id="editor" style="width:900px;height:350px;">
+		{{ note.text }}
 	</div>
+</div>
 
-	{% include "textshare/read_sio.js" %}
+{% include "textshare/read_sio.js" %}
 
 {% endblock %}

@@ -12,8 +12,7 @@ urlpatterns = patterns('textshare.views',
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
+    
     url(r'^$', 'index'),
     url(r'^(?P<note_key>\d+)/(?P<note_pass>\w+)/$', 'edit_note'),
     url(r'^(?P<note_key>\d+)/$', 'show_note'),
