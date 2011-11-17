@@ -1,0 +1,24 @@
+<script src="/textshare/media/js/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/textshare/media/js/socket.io.js"></script>
+<script src="/textshare/media/js/share/share.js"></script>
+<script src="/textshare/media/js/share/ace.js"></script>
+<script>
+var editor = ace.edit("editor");
+
+editor.setReadOnly(true);
+editor.session.setUseWrapMode(true);
+
+sharejs.open('textshare:{{ note.key }}', 'text', 'http://' + window.location.hostname + ':7121/sjs', function(error, doc) {
+	doc.attach_ace(editor);
+	editor.getSession().setValue('{{ note.text|escapejs }}');
+});
+
+// var elem = document.getElementById('editor');
+// 
+// sharejs.open('textshare_test', 'text', 'http://localhost:7121/{{ note.key }}/', function(error, doc) {
+// 	elem.innerHTML = doc.snapshot;
+// 	doc.on('change', function() {
+// 		elem.innerText = doc.snapshot;
+// 	});
+// });
+</script>

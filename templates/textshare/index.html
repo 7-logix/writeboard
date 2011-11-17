@@ -12,40 +12,41 @@
 		{% endif %}
 	</center>
 
-	<div id="editor" style="width:900px;height:350px;"></div>
+	<div style="height:350px;">
+		<div id="editor" style="width:900px;height:350px;"></div>
+	</div>
 
 	<center>
 		<form action="{% url textshare.views.save_note%}" method="post" onsubmit="form_onsubmit();">
 			{% csrf_token %}
 			<input type="hidden" id="note_text" name="note_text">
 			</br>
-			<input type="submit" value="Save" style="position:relative;top:350px;">
+			<input type="submit" value="Save">
 		</form>
 	</center>
 </div>
 
-<div style="position:relative;top:350px;">
-	<hr />
+<hr />
 
-	<div style="height:50px;">
-		<center>
-			<h1>Latest shares:</h1>
-		</center>
-	</div>
-
-	<div style="width:500px;margin-left:auto;margin-right:auto;">
-		{% for note in notes %}
-			<div style="background-color:#f5f5f5;margin-top:40px;">
-				<center>
-					<a href="/{{note.key}}/">ID: {{note.key}}</a>
-				</center>
-				<br />
-				{{ note.text|linebreaks }}
-			</div>
-		{% endfor %}
-	</div>
+<div style="height:50px;">
+	<center>
+		<h1>Latest shares:</h1>
+	</center>
 </div>
 
-{% include "textshare/includes/index_sio.js" %}
+<div style="width:600px;margin-left:auto;margin-right:auto;">
+	{% for note in notes %}
+		<div style="width:600px;height:250;overflow:auto;background-color:#f5f5f5;margin-top:40px;">
+			<center>
+				<a href="/{{ note.key }}/{{ note.pass_key }}/">ID: {{note.key}}</a>
+				<hr />
+			</center>
+			<br />
+			{{ note.text|linebreaks }}
+		</div>
+	{% endfor %}
+</div>
+
+{% include "textshare/includes/index_sio.js.html" %}
 
 {% endblock %}

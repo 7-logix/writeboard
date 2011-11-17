@@ -10,18 +10,20 @@
 		<a href="/{{note.key}}/{{note.pass_key}}/"><p>Read-Write URL: www.textshare.com/{{note.key}}/{{note.pass_key}}/</p></a>
 	</center>
 	
-	<div id="editor" style="width:900px;height:350px;"></div>
+	<div style="height:350px;">
+		<div id="editor" style="width:900px;height:350px;"></div>
+	</div>
 	
 	<center>
 		<form action="{% url textshare.views.update_note note.key note.pass_key%}" method="post" onsubmit="form_onsubmit();">
 			{% csrf_token %}
 			<input type="hidden" id="note_text" name="note_text">
 			</br>
-			<input type="submit" value="Save" style="position:relative;top:350px;">
+			<input type="submit" value="Save">
 		</form>
 	</center>
 </div>
 
-{% include "textshare/includes/write_sio.js" %}
+{% include "textshare/includes/write_sio.js.html" %}
 
 {% endblock %}
